@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $('#tableProduk').DataTable();
+    $('#tableModalBahan').DataTable();
 
     $("#bahanModals").click(function() {
         var produkValue = $("#namaProduk").val();
@@ -57,7 +58,7 @@ $(document).ready(function() {
                     return false;
                 }
             });
-
+            var nextRowNumber = 1;
             if(!isDuplicate) {
                 var table = 
                 '<tr>' +
@@ -67,7 +68,7 @@ $(document).ready(function() {
                         '<div class="input-group mb-3">'+
                             '<span class="input-group-text" id="basic-addon1">Qty</span>'+
                             '<input type="hidden" value="'+ jumlah +'" id="batasStok" class="form-control" placeholder="Qty" aria-label="Username" aria-describedby="basic-addon1">'+
-                            '<input type="text" value="1" id="inputJumlah" class="form-control" placeholder="Qty" aria-label="Username" aria-describedby="basic-addon1">'+
+                            '<input type="text" data-row="' + nextRowNumber + '" value="1" id="inputJumlah" class="form-control validateJumlah" placeholder="Qty" aria-label="Username" aria-describedby="basic-addon1">'+
                         '</div>'+ 
                     '</td>' +
                     '<td class="text-center">' +
@@ -75,6 +76,14 @@ $(document).ready(function() {
                     '</td>' +
                 '</tr>';
                 $("#tableBahan #bodyBahan").append(table);
+
+                $('input[data-row="' + nextRowNumber + '"]').on('input', function() {
+                    var inputValue = $(this).val();
+                    var numericValue = inputValue.replace(/[^0-9]/g, '');
+                    $(this).val(numericValue);
+                });
+                
+                nextRowNumber++;
 
                 var kode = $("#kodeBahan").val("");
                 var nama = $("#namaBahan").val("");
@@ -126,6 +135,13 @@ $(document).ready(function() {
 
         $("#tableBahan").on("click", ".hapusBahan", function() {
             $(this).closest("tr").remove();
+        });
+
+        $('.validateJumlah').on('input', function() {
+            var v = $(this).val(),
+                vc = v.replace(/[^0-9]/, "");
+            vc = v.replace(/[^0-9,]/, "");
+            if (v !== vc)[$(this).val(vc)];
         });
 
 });
